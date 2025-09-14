@@ -3,22 +3,23 @@
 abstract public class Weapon : IWeapon
 {
     protected const string _noAmmo = "No ammo";
+
+    protected ushort _ammo;
+    protected ushort _maxAmmo;
     protected float _damage;
-    protected string _shootSound;
+    protected string _shootSound = string.Empty;
 
     public abstract string WeaponName { get; }
-    public abstract ushort Ammo { get; set; }
-    public abstract ushort MaxAmmo { get; }
     public abstract bool IsInfiniteAmmo { get; set; }
     public abstract ushort FireRate { get; }
 
     public virtual float Shoot()
     {
-        if (Ammo > 0)
+        if (_ammo > 0)
         {
             if (!IsInfiniteAmmo)
             {
-                Ammo -= 1;
+                _ammo -= 1;
             }
 
             Console.WriteLine(_shootSound);

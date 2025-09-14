@@ -5,7 +5,18 @@
         private const int _minRandomValue = 3200;
         private const int _maxRandomValue = 3800;
 
-        public override short Quantity { get; set; } = 10;
+        public override ushort Quantity { get; set; }
+
+        SmallAid()
+        {
+            Quantity = 10;
+        }
+
+        SmallAid(ushort quantity)
+        {
+            Quantity = quantity;
+        }
+
         public override void Generate()
         {
             Random random = new Random();

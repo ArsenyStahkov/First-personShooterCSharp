@@ -2,7 +2,7 @@
 {
     interface IItem
     {
-        abstract short Quantity { get; set; }
+        abstract ushort Quantity { get; set; }
         abstract void Generate();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using TheGame.Monsters;
 using TheGame.Monsters.Zombies;
 using TheGame.Player;
+using TheGame.SkillFileData;
 
 namespace TheGame
 {
@@ -11,10 +12,12 @@ namespace TheGame
         private const int _valueY = 0;
         private const int _valueZero = 0;
 
+        private SkillData _skillData;
         private PlayerClass _player;
 
         public MainGame()
         {
+            _skillData = new SkillData();
             _player = new PlayerClass();
             WriteValueOnScreen(_healthValueX, _valueY, _player.Health, ConsoleColor.Green);
             WriteValueOnScreen(_armorValueX, _valueY, _player.Armor, ConsoleColor.DarkBlue);

@@ -2,13 +2,12 @@
 
 public abstract class Monster : IMonster
 {
+    protected ushort _health;
+    protected float _damage;
     protected int _delayBeforeAttack;
     protected int _spreadForDelay;
 
     protected System.Timers.Timer _timer = new System.Timers.Timer();
-
-    public abstract ushort Health { get; }
-    public float Damage { get; set; } = 0.0f;
 
     public delegate void DelegateAttack(float damage);
     public event DelegateAttack MonsterAttacked;

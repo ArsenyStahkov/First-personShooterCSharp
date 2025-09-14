@@ -5,22 +5,30 @@ public class Imp : Monster, IMonster
     private const string _showUp = "Rrrargh!";
     private const string _impIsDead = "Imp is dead";
     private const string _attack = "Imp is shooting!";
-    public override ushort Health => 10;
-    public float Damage { get; set; } = 15.0f;
 
     public Imp()
     {
+        _health = 10;
+        _damage = 15.0f;
+        _delayBeforeAttack = 1600;
+        Console.WriteLine(_showUp);
+    }
+
+    public Imp(ushort health, float damage)
+    {
+        _health = health;
+        _damage = damage;
         _delayBeforeAttack = 1600;
         Console.WriteLine(_showUp);
     }
 
     public override void Attack(Object source, System.Timers.ElapsedEventArgs e)
     {
-        if (Health > 0)
+        if (_health > 0)
         {
             Random random = new Random();
             _timer.Interval = random.Next(_delayBeforeAttack - _spreadForDelay, _delayBeforeAttack + _spreadForDelay);
-            OnMonsterAttackTriggered(Damage);
+            OnMonsterAttackTriggered(_damage);
             Console.WriteLine(_attack);
         }
     }

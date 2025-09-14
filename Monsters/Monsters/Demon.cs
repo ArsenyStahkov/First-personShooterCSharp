@@ -5,22 +5,30 @@ public class Demon : Monster, IMonster
     private const string _showUp = "Uuurgh!";
     private const string _demonDead = "Demon is dead";
     private const string _attack = "Demon is shooting!";
-    public override ushort Health => 60;
-    public float Damage { get; set; } = 25.0f;
 
     public Demon()
     {
+        _health = 60;
+        _damage = 25.0f;
+        _delayBeforeAttack = 1600;
+        Console.WriteLine(_showUp);
+    }
+
+    public Demon(ushort health, float damage)
+    {
+        _health = health;
+        _damage = damage;
         _delayBeforeAttack = 1600;
         Console.WriteLine(_showUp);
     }
 
     public override void Attack(Object source, System.Timers.ElapsedEventArgs e)
     {
-        if (Health > 0)
+        if (_health > 0)
         {
             Random random = new Random();
             _timer.Interval = random.Next(_delayBeforeAttack - _spreadForDelay, _delayBeforeAttack + _spreadForDelay);
-            OnMonsterAttackTriggered(Damage);
+            OnMonsterAttackTriggered(_damage);
             Console.WriteLine(_attack);
         }
     }

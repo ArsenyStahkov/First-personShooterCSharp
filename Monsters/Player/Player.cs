@@ -9,14 +9,18 @@ public class PlayerClass : IPlayer
 
     private List<Weapon> _weapons;
     private Weapon _activeWeapon;
-    public short Health { get; set; } = 100;
-    public short Armor { get; set; } = 0;
-    public float Damage { get; set; } = 0.0f;
+
+    public short Health { get; set; }
+    public short Armor { get; set; }
+    public float Damage { get; set; }
 
     public PlayerClass()
     {
         _weapons = new List<Weapon>() { new Fist(), new Gun() };
         _activeWeapon = _weapons[1];
+        Health = 100;
+        Armor = 0;
+        Damage = 0.0f;
     }
 
     public void PressKey()
@@ -45,12 +49,10 @@ public class PlayerClass : IPlayer
 
     public void Attack()
     {
-        if (_activeWeapon.Ammo > 0)
-            Damage = _activeWeapon.Shoot();
-        else
-            ChangeActiveWeapon(0);
+        Damage = _activeWeapon.Shoot();
 
-        Damage = 0.0f;
+        if (Damage <= 0.0f)
+            ChangeActiveWeapon(0);
     }
 
     private void ChangeActiveWeapon(int weaponNum)
