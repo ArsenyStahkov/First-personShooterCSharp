@@ -2,5 +2,6 @@
 
 public struct CHARGE_DISTRIBUTION
 {
-    public ushort quantity;
+    public string Name { get; set; }
+    public ushort Quantity { get; set; }
 }

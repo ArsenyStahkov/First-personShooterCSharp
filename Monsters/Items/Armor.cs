@@ -1,26 +1,25 @@
-﻿namespace Monsters.Items
+﻿namespace TheGame.Items;
+
+public class Armor : Item, IItem
 {
-    public class Armor : Item, IItem
+    private const int _minRandomValue = 2200;
+    private const int _maxRandomValue = 2800;
+
+    public override ushort Quantity { get; set; }
+
+    Armor()
     {
-        private const int _minRandomValue = 2200;
-        private const int _maxRandomValue = 2800;
+        Quantity = 15;
+    }
 
-        public override ushort Quantity { get; set; }
+    Armor(ushort quantity)
+    {
+        Quantity = quantity;
+    }
 
-        Armor()
-        {
-            Quantity = 15;
-        }
-
-        Armor(ushort quantity)
-        {
-            Quantity = quantity;
-        }
-
-        public override void Generate()
-        {
-            Random random = new Random();
-            _timer.Interval = random.Next(_minRandomValue, _maxRandomValue);
-        }
+    public override void Generate()
+    {
+        Random random = new Random();
+        _timer.Interval = random.Next(_minRandomValue, _maxRandomValue);
     }
 }

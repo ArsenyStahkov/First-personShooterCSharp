@@ -1,26 +1,25 @@
-﻿namespace Monsters.Items
+﻿namespace TheGame.Items;
+
+public class BigAid : Item, IItem
 {
-    public class BigAid : Item, IItem
+    private const int _minRandomValue = 2200;
+    private const int _maxRandomValue = 2800;
+
+    public override ushort Quantity { get; set; }
+
+    BigAid()
     {
-        private const int _minRandomValue = 2200;
-        private const int _maxRandomValue = 2800;
+        Quantity = 25;
+    }
 
-        public override ushort Quantity { get; set; }
+    BigAid(ushort quantity)
+    {
+        Quantity = quantity;
+    }
 
-        BigAid()
-        {
-            Quantity = 25;
-        }
-
-        BigAid(ushort quantity)
-        {
-            Quantity = quantity;
-        }
-
-        public override void Generate()
-        {
-            Random random = new Random();
-            _timer.Interval = random.Next(_minRandomValue, _maxRandomValue);
-        }
+    public override void Generate()
+    {
+        Random random = new Random();
+        _timer.Interval = random.Next(_minRandomValue, _maxRandomValue);
     }
 }

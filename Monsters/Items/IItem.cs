@@ -1,8 +1,7 @@
-﻿namespace Monsters.Items
+﻿namespace TheGame.Items;
+
+interface IItem
 {
-    interface IItem
-    {
-        abstract ushort Quantity { get; set; }
-        abstract void Generate();
-    }
+    abstract ushort Quantity { get; set; }
+    abstract void Generate();
 }

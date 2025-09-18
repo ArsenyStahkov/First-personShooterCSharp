@@ -1,8 +1,8 @@
-﻿namespace Monsters.SkillFileData;
+﻿namespace TheGame.SkillFileData;
 
 public struct WEAPON
 {
-    public string _name;
-    public float _dmg;
-    public ushort _max;
+    public string Name { get; set; }
+    public ushort Max { get; set; }
+    public float Dmg { get; set; }
 }

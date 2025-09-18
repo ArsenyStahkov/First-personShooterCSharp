@@ -1,6 +1,7 @@
-﻿using TheGame.Monsters;
-using TheGame.Monsters.Zombies;
+﻿using System.Reflection;
 using System.Text.RegularExpressions;
+using TheGame.Monsters;
+using TheGame.Monsters.Zombies;
 
 namespace TheGame.SkillFileData;
 
@@ -13,6 +14,7 @@ public class SkillData
 
     private const string _health = "health";
     private const string _dmg = "dmg";
+    private const string _max = "max";
 
     private const int _wordsCount = 4;
 
@@ -34,7 +36,7 @@ public class SkillData
 
     public List<NPC>? GetNpcs()
     {
-        if (_fileLines.Length < 2)
+        if (_fileLines.Length < 3)
             return null;
 
         int npcsIndex = 0;
@@ -109,5 +111,179 @@ public class SkillData
         }
 
         return NPCs;
+    }
+
+    public List<WEAPON>? GetWeapons(Type type)
+    {
+        if (_fileLines.Length < 3)
+            return null;
+
+        int initIndex = 0;
+
+        for (int i = 0; i < _fileLines.Length; i++)
+        {
+            if (_fileLines[i].Contains(_weapons, StringComparison.OrdinalIgnoreCase))
+            {
+                initIndex = i;
+                break;
+            }
+        }
+
+        if (initIndex == 0)
+            return null;
+
+        List<WEAPON> WEAPONS = new List<WEAPON>();
+        initIndex++;
+
+        for (int i = initIndex; i < _fileLines.Length; i++)
+        {
+            if (!_fileLines[i].Contains("//"))
+                continue;
+
+            List<string>? typeNames = Assembly.GetAssembly(type).GetTypes()
+                .Where(ourtype => ourtype.IsSubclassOf(type))
+                .Select(type => type.Name)
+                .ToList();
+
+            bool isMatchByName = false;
+
+            foreach (string typeName in typeNames)
+            {
+                if (_fileLines[i].Contains(typeName, StringComparison.OrdinalIgnoreCase))
+                {
+                    isMatchByName = true;
+                    break;
+                }
+            }
+
+            if (isMatchByName)
+            {
+                WEAPON weapon = new WEAPON();
+
+                for (int k = ++i; k < _fileLines.Length; k++)
+                {
+                    if (_fileLines[k].Contains("//"))
+                        break;
+
+                    i = k;
+
+                    if (string.IsNullOrEmpty(_fileLines[k]))
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        _fileLines[k] = Regex.Replace(_fileLines[k], @"\s+", "_");
+                        string[] skill = _fileLines[k].Split('_');
+
+                        if (skill.Length != _wordsCount)
+                            continue;
+
+                        isMatchByName = false;
+
+                        foreach (string typeName in typeNames)
+                        {
+                            if (string.Equals(typeName, skill[1], StringComparison.OrdinalIgnoreCase))
+                            {
+                                isMatchByName = true;
+                                break;
+                            }
+                        }
+
+                        if (!isMatchByName)
+                            continue;
+
+                        weapon.Name = skill[1].ToLower();
+                        string value = skill[3].Replace("\"", string.Empty);
+
+                        ushort max;
+                        if (string.Equals(skill[2], _max, StringComparison.OrdinalIgnoreCase) && UInt16.TryParse(value, out max))
+                        {
+                            weapon.Max = max;
+                            continue;
+                        }
+
+                        float dmg;
+                        if (string.Equals(skill[2], _dmg, StringComparison.OrdinalIgnoreCase) && Single.TryParse(value, out dmg))
+                            weapon.Dmg = dmg > 0 ? dmg : 0;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(weapon.Name))
+                    WEAPONS.Add(weapon);
+            }
+            else if (_fileLines[i].Contains("=") && i != initIndex)
+            {
+                break;
+            }
+        }
+
+        return WEAPONS;
+    }
+
+    public List<CHARGE_DISTRIBUTION>? GetChargeDistr()
+    {
+        if (_fileLines.Length < 2)
+            return null;
+
+        int initIndex = 0;
+
+        for (int i = 0; i < _fileLines.Length; i++)
+        {
+            if (_fileLines[i].Contains(_chargeDistribution, StringComparison.OrdinalIgnoreCase))
+            {
+                initIndex = i;
+                break;
+            }
+        }
+
+        if (initIndex == 0)
+            return null;
+
+        List<CHARGE_DISTRIBUTION> DISTRS = new List<CHARGE_DISTRIBUTION>();
+        initIndex++;
+
+        for (int i = initIndex; i < _fileLines.Length; i++)
+        {
+            if (!_fileLines[i].Contains("//"))
+                continue;
+
+            if (_fileLines[i].Contains("=") && i != initIndex)
+                break;
+
+            CHARGE_DISTRIBUTION distr = new CHARGE_DISTRIBUTION();
+
+            for (int k = ++i; k < _fileLines.Length; k++)
+            {
+                i = k;
+
+                if (_fileLines[k].Contains("//"))
+                    break;
+
+                if (string.IsNullOrEmpty(_fileLines[k]))
+                {
+                    continue;
+                }
+                else
+                {
+                    _fileLines[k] = Regex.Replace(_fileLines[k], @"\s+", "_");
+                    string[] skill = _fileLines[k].Split('_');
+
+                    if (skill.Length != _wordsCount - 1)
+                        continue;
+
+                    distr.Name = skill[1].ToLower();
+                    string value = skill[2].Replace("\"", string.Empty);
+
+                    ushort quantity;
+                    if (UInt16.TryParse(value, out quantity))
+                        distr.Quantity = quantity;
+
+                    DISTRS.Add(distr);
+                }
+            }
+        }
+
+        return DISTRS;
     }
 }
