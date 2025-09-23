@@ -1,4 +1,6 @@
-﻿namespace TheGame.Monsters;
+﻿using TheGame.Base.Interfaces;
+
+namespace TheGame.Monsters;
 
 public class Demon : Monster, IMonster
 {

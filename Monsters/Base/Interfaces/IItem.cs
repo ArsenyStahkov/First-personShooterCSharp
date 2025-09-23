@@ -1,4 +1,4 @@
-﻿namespace TheGame.Items;
+﻿namespace TheGame.Base.Interfaces;
 
 interface IItem
 {

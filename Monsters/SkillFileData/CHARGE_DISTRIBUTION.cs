@@ -1,6 +1,8 @@
-﻿namespace TheGame.SkillFileData;
+﻿using TheGame.Base.Interfaces;
 
-public struct CHARGE_DISTRIBUTION
+namespace TheGame.SkillFileData;
+
+public struct CHARGE_DISTRIBUTION : ISkillFileData
 {
     public string Name { get; set; }
     public ushort Quantity { get; set; }

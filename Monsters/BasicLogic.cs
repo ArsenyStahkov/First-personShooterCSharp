@@ -1,11 +1,13 @@
 ﻿using TheGame.Monsters;
 using TheGame.Monsters.Zombies;
+using TheGame.Weapons;
+using TheGame.Items;
 using TheGame.Player;
 using TheGame.SkillFileData;
 
 namespace TheGame
 {
-    class MainGame
+    class BasicLogic
     {
         private const int _healthValueX = 30;
         private const int _armorValueX = 40;
@@ -15,9 +17,12 @@ namespace TheGame
         private SkillData _skillData;
         private PlayerClass _player;
 
-        public MainGame()
+        public BasicLogic()
         {
             _skillData = new SkillData();
+            List<NPC>? NPCs = _skillData.GetNpcs(typeof(Monster));
+            List<WEAPON>? WEAPONS = _skillData.GetWeapons(typeof(Weapon));
+            List<CHARGE_DISTRIBUTION>? DISTRS = _skillData.GetChargeDistr(typeof(Item));
             _player = new PlayerClass();
             WriteValueOnScreen(_healthValueX, _valueY, _player.Health, ConsoleColor.Green);
             WriteValueOnScreen(_armorValueX, _valueY, _player.Armor, ConsoleColor.DarkBlue);

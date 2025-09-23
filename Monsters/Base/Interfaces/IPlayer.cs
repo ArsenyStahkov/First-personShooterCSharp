@@ -1,4 +1,4 @@
-﻿namespace TheGame.Player;
+﻿namespace TheGame.Base.Interfaces;
 
 interface IPlayer
 {

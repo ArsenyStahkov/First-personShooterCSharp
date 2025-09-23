@@ -1,4 +1,6 @@
-﻿namespace TheGame.Items;
+﻿using TheGame.Base.Interfaces;
+
+namespace TheGame.Items;
 
 public class BigAid : Item, IItem
 {

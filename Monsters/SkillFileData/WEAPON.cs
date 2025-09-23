@@ -1,6 +1,8 @@
-﻿namespace TheGame.SkillFileData;
+﻿using TheGame.Base.Interfaces;
 
-public struct WEAPON
+namespace TheGame.SkillFileData;
+
+public struct WEAPON : ISkillFileData
 {
     public string Name { get; set; }
     public ushort Max { get; set; }

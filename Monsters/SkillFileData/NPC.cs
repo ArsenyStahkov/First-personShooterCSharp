@@ -1,6 +1,8 @@
-﻿namespace TheGame.SkillFileData;
+﻿using TheGame.Base.Interfaces;
 
-public struct NPC
+namespace TheGame.SkillFileData;
+
+public struct NPC : ISkillFileData
 {
     public string Name { get; set; }
     public ushort Health { get; set; }

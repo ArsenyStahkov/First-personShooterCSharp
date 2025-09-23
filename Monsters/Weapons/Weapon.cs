@@ -1,4 +1,6 @@
-﻿namespace TheGame.Weapons;
+﻿using TheGame.Base.Interfaces;
+
+namespace TheGame.Weapons;
 
 abstract public class Weapon : IWeapon
 {

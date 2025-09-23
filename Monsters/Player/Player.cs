@@ -1,5 +1,6 @@
-﻿using TheGame.Weapons;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using TheGame.Base.Interfaces;
+using TheGame.Weapons;
 
 namespace TheGame.Player;
 

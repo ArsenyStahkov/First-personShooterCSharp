@@ -1,4 +1,6 @@
-﻿namespace TheGame.Weapons;
+﻿using TheGame.Base.Interfaces;
+
+namespace TheGame.Weapons;
 
 public class Fist : Weapon, IWeapon
 {

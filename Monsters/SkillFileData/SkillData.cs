@@ -1,7 +1,5 @@
 ﻿using System.Reflection;
 using System.Text.RegularExpressions;
-using TheGame.Monsters;
-using TheGame.Monsters.Zombies;
 
 namespace TheGame.SkillFileData;
 
@@ -34,43 +32,67 @@ public class SkillData
         }
     }
 
-    public List<NPC>? GetNpcs()
+    public int GetIndex(string dataName, int requiredLinesCount)
     {
-        if (_fileLines.Length < 3)
-            return null;
+        if (_fileLines.Length < requiredLinesCount)
+            return 0;
 
-        int npcsIndex = 0;
+        int initIndex = 0;
 
         for (int i = 0; i < _fileLines.Length; i++)
         {
-            if (_fileLines[i].Contains(_npcs, StringComparison.OrdinalIgnoreCase))
+            if (_fileLines[i].Contains(dataName, StringComparison.OrdinalIgnoreCase))
             {
-                npcsIndex = i;
+                initIndex = i;
                 break;
             }
         }
 
-        if (npcsIndex == 0)
+        if (initIndex == 0)
+            return 0;
+
+        return ++initIndex;
+    }
+
+    public List<NPC>? GetNpcs(Type type)
+    {
+        int initIndex = GetIndex(_npcs, 3);
+
+        if (initIndex == 0)
             return null;
 
         List<NPC> NPCs = new List<NPC>();
-        int initIndex = npcsIndex + 1;
 
         for (int i = initIndex; i < _fileLines.Length; i++)
         {
             if (!_fileLines[i].Contains("//"))
                 continue;
 
-            bool isNpc = _fileLines[i].Contains(nameof(Zombie), StringComparison.OrdinalIgnoreCase)
-                      || _fileLines[i].Contains(nameof(Imp), StringComparison.OrdinalIgnoreCase)
-                      || _fileLines[i].Contains(nameof(Demon), StringComparison.OrdinalIgnoreCase);
+            List<string>? typeNames = Assembly.GetAssembly(type).GetTypes()
+                .Where(ourtype => ourtype.IsSubclassOf(type))
+                .Select(type => type.Name)
+                .ToList();
 
-            if (isNpc)
+            bool isMatchByName = false;
+
+            foreach (string typeName in typeNames)
+            {
+                if (_fileLines[i].Contains(typeName, StringComparison.OrdinalIgnoreCase))
+                {
+                    isMatchByName = true;
+                    break;
+                }
+            }
+
+            if (isMatchByName)
             {
                 NPC npc = new NPC();
 
-                for (int k = i + 1; !_fileLines[k].Contains("//"); k++)
+                for (int k = ++i; k < _fileLines.Length; k++)
                 {
+                    if (_fileLines[k].Contains("//"))
+                        break;
+
                     i = k;
 
                     if (string.IsNullOrEmpty(_fileLines[k]))
@@ -85,24 +107,37 @@ public class SkillData
                         if (skill.Length != _wordsCount)
                             continue;
 
+                        isMatchByName = false;
+
+                        foreach (string typeName in typeNames)
+                        {
+                            if (string.Equals(typeName, skill[1], StringComparison.OrdinalIgnoreCase))
+                            {
+                                isMatchByName = true;
+                                break;
+                            }
+                        }
+
+                        if (!isMatchByName)
+                            continue;
+
                         npc.Name = skill[1].ToLower();
                         string value = skill[3].Replace("\"", string.Empty);
 
                         ushort health;
-                        if (skill[2].ToLower() == _health && UInt16.TryParse(value, out health))
+                        if (string.Equals(skill[2], _health, StringComparison.OrdinalIgnoreCase) && UInt16.TryParse(value, out health))
                         {
                             npc.Health = health;
                             continue;
                         }
 
                         float dmg;
-                        if (skill[2].ToLower() == _dmg && Single.TryParse(value, out dmg))
+                        if (string.Equals(skill[2], _dmg, StringComparison.OrdinalIgnoreCase) && Single.TryParse(value, out dmg))
                             npc.Dmg = dmg > 0 ? dmg : 0;
                     }
                 }
 
-                if (!string.IsNullOrEmpty(npc.Name))
-                    NPCs.Add(npc);
+                NPCs.Add(npc);
             }
             else if (_fileLines[i].Contains("=") && i != initIndex)
             {
@@ -115,25 +150,12 @@ public class SkillData
 
     public List<WEAPON>? GetWeapons(Type type)
     {
-        if (_fileLines.Length < 3)
-            return null;
-
-        int initIndex = 0;
-
-        for (int i = 0; i < _fileLines.Length; i++)
-        {
-            if (_fileLines[i].Contains(_weapons, StringComparison.OrdinalIgnoreCase))
-            {
-                initIndex = i;
-                break;
-            }
-        }
+        int initIndex = GetIndex(_weapons, 3);
 
         if (initIndex == 0)
             return null;
 
         List<WEAPON> WEAPONS = new List<WEAPON>();
-        initIndex++;
 
         for (int i = initIndex; i < _fileLines.Length; i++)
         {
@@ -209,8 +231,7 @@ public class SkillData
                     }
                 }
 
-                if (!string.IsNullOrEmpty(weapon.Name))
-                    WEAPONS.Add(weapon);
+                WEAPONS.Add(weapon);
             }
             else if (_fileLines[i].Contains("=") && i != initIndex)
             {
@@ -221,27 +242,14 @@ public class SkillData
         return WEAPONS;
     }
 
-    public List<CHARGE_DISTRIBUTION>? GetChargeDistr()
+    public List<CHARGE_DISTRIBUTION>? GetChargeDistr(Type type)
     {
-        if (_fileLines.Length < 2)
-            return null;
-
-        int initIndex = 0;
-
-        for (int i = 0; i < _fileLines.Length; i++)
-        {
-            if (_fileLines[i].Contains(_chargeDistribution, StringComparison.OrdinalIgnoreCase))
-            {
-                initIndex = i;
-                break;
-            }
-        }
+        int initIndex = GetIndex(_chargeDistribution, 2);
 
         if (initIndex == 0)
             return null;
 
         List<CHARGE_DISTRIBUTION> DISTRS = new List<CHARGE_DISTRIBUTION>();
-        initIndex++;
 
         for (int i = initIndex; i < _fileLines.Length; i++)
         {
@@ -251,14 +259,17 @@ public class SkillData
             if (_fileLines[i].Contains("=") && i != initIndex)
                 break;
 
-            CHARGE_DISTRIBUTION distr = new CHARGE_DISTRIBUTION();
-
             for (int k = ++i; k < _fileLines.Length; k++)
             {
                 i = k;
 
                 if (_fileLines[k].Contains("//"))
                     break;
+
+                List<string>? typeNames = Assembly.GetAssembly(type).GetTypes()
+                    .Where(ourtype => ourtype.IsSubclassOf(type))
+                    .Select(type => type.Name)
+                    .ToList();
 
                 if (string.IsNullOrEmpty(_fileLines[k]))
                 {
@@ -271,6 +282,22 @@ public class SkillData
 
                     if (skill.Length != _wordsCount - 1)
                         continue;
+
+                    bool isMatchByName = false;
+
+                    foreach (string typeName in typeNames)
+                    {
+                        if (string.Equals(skill[1], typeName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            isMatchByName = true;
+                            break;
+                        }
+                    }
+
+                    if (!isMatchByName)
+                        continue;
+
+                    CHARGE_DISTRIBUTION distr = new CHARGE_DISTRIBUTION();
 
                     distr.Name = skill[1].ToLower();
                     string value = skill[2].Replace("\"", string.Empty);

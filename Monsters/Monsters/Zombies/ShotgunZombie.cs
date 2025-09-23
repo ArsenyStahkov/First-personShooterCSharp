@@ -1,4 +1,5 @@
-﻿using TheGame.Weapons;
+﻿using TheGame.Base.Interfaces;
+using TheGame.Weapons;
 
 namespace TheGame.Monsters.Zombies;
 

@@ -1,4 +1,6 @@
-﻿namespace TheGame.Items;
+﻿using TheGame.Base.Interfaces;
+
+namespace TheGame.Items;
 
 abstract public class Item : IItem
 {

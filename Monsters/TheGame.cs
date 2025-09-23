@@ -1,10 +1,10 @@
 ﻿namespace TheGame
 {
-    class Program
+    class TheGame
     {
         static void Main(string[] args)
         {
-            MainGame mainGame = new MainGame();
+            BasicLogic mainGame = new BasicLogic();
             mainGame.StartGame();
         }
     }
