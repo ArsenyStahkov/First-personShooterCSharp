@@ -20,10 +20,10 @@ public sealed class GunZombie : Zombie, IMonster
         _delayBeforeAttack = 1200 + _zombieWeapon.FireRate;
     }
 
-    public GunZombie(ushort health, ushort maxAmmo, float damage)
+    public GunZombie(ushort health, float damage)
     {
         _health = health;
-        _zombieWeapon = new Gun(maxAmmo, damage) { IsInfiniteAmmo = true };
+        _zombieWeapon = new Gun(damage) { IsInfiniteAmmo = true };
         _delayBeforeAttack = 1200 + _zombieWeapon.FireRate;
     }
 

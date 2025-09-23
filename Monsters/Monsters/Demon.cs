@@ -4,22 +4,25 @@ namespace TheGame.Monsters;
 
 public class Demon : Monster, IMonster
 {
+    private const ushort _fixedHealth = 60;
+    private const float _fixedDamage = 25.0f;
+    private const int _fixedDelay = 1600;
     private const string _showUp = "Uuurgh!";
     private const string _demonDead = "Demon is dead";
     private const string _attack = "Demon is shooting!";
 
     public Demon()
     {
-        _health = 60;
-        _damage = 25.0f;
-        _delayBeforeAttack = 1600;
+        _health = _fixedHealth;
+        _damage = _fixedDamage;
+        _delayBeforeAttack = _fixedDelay;
         Console.WriteLine(_showUp);
     }
 
     public Demon(ushort health, float damage)
     {
-        _health = health;
-        _damage = damage;
+        _health = health > 0 ? health : _fixedHealth;
+        _damage = damage > 0 ? damage : _fixedDamage;
         _delayBeforeAttack = 1600;
         Console.WriteLine(_showUp);
     }

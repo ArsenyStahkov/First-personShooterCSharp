@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using TheGame.Base.Interfaces;
+using TheGame.SkillFileData;
 using TheGame.Weapons;
 
 namespace TheGame.Player;
@@ -7,6 +8,9 @@ namespace TheGame.Player;
 public class PlayerClass : IPlayer
 {
     private const string _playerIsDead = "YOU ARE DEAD";
+    private const short _fixedHealth = 100;
+    private const short _fixedArmor = 0;
+    private const float _fixedDamage = 0.0f;
 
     private List<Weapon> _weapons;
     private Weapon _activeWeapon;
@@ -19,9 +23,30 @@ public class PlayerClass : IPlayer
     {
         _weapons = new List<Weapon>() { new Fist(), new Gun() };
         _activeWeapon = _weapons[1];
-        Health = 100;
-        Armor = 0;
-        Damage = 0.0f;
+        Health = _fixedHealth;
+        Armor = _fixedArmor;
+        Damage = _fixedDamage;
+    }
+
+    public PlayerClass(List<WEAPON> weapons)
+    {
+        WEAPON fist = new WEAPON();
+        WEAPON gun = new WEAPON();
+
+        foreach (WEAPON weapon in weapons)
+        {
+            if (string.Equals(weapon.Name, nameof(fist), StringComparison.OrdinalIgnoreCase))
+                fist = weapon;
+            if (string.Equals(weapon.Name, nameof(gun), StringComparison.OrdinalIgnoreCase))
+                gun = weapon;
+        }
+
+        _weapons = new List<Weapon>() { new Fist(fist.Dmg), new Gun(gun.Max, gun.Dmg) };
+
+        _activeWeapon = _weapons[1];
+        Health = _fixedHealth;
+        Armor = _fixedArmor;
+        Damage = _fixedDamage;
     }
 
     public void PressKey()

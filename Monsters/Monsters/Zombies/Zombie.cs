@@ -5,12 +5,13 @@ namespace TheGame.Monsters.Zombies
 {
     public class Zombie : Monster, IMonster
     {
+        private const ushort _fixedHealth = 6;
         private const string _showUp = "Arrrgh!";
         protected Weapon _zombieWeapon;
 
         public Zombie()
         {
-            _health = 6;
+            _health = _fixedHealth;
             Console.WriteLine(_showUp);
         }
 
