@@ -5,7 +5,7 @@ namespace TheGame.Monsters.Zombies
 {
     public class Zombie : Monster, IMonster
     {
-        private const ushort _fixedHealth = 6;
+        protected const ushort _fixedHealth = 6;
         private const string _showUp = "Arrrgh!";
         protected Weapon _zombieWeapon;
 

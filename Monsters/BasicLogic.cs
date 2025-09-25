@@ -21,6 +21,9 @@ namespace TheGame
         private List<NPC>? _NPCs = null;
         private List<CHARGE_DISTRIBUTION>? _DISTRS = null;
 
+        private const int _weaponsCount = 3;
+        private const int _npcsCount = 3;
+
         public BasicLogic()
         {
             _skillData = new SkillData();
@@ -121,79 +124,48 @@ namespace TheGame
         public void StartGame()
         {
             // [0] - fist, [1] - gun, [2] - shotgun
-            WEAPON[] WEAPONS = new WEAPON[3];
+            WEAPON[] WEAPONS = new WEAPON[_weaponsCount];
 
-            foreach (WEAPON weapon in _WEAPONS)
+            if (_WEAPONS is not null)
             {
-                if (string.Equals(weapon.Name, nameof(Fist), StringComparison.OrdinalIgnoreCase))
-                    WEAPONS[0] = weapon;
-                if (string.Equals(weapon.Name, nameof(Gun), StringComparison.OrdinalIgnoreCase))
-                    WEAPONS[1] = weapon;
-                if (string.Equals(weapon.Name, nameof(Shotgun), StringComparison.OrdinalIgnoreCase))
-                    WEAPONS[2] = weapon;
+                foreach (WEAPON weapon in _WEAPONS)
+                {
+                    if (string.Equals(weapon.Name, nameof(Fist), StringComparison.OrdinalIgnoreCase))
+                        WEAPONS[0] = weapon;
+                    if (string.Equals(weapon.Name, nameof(Gun), StringComparison.OrdinalIgnoreCase))
+                        WEAPONS[1] = weapon;
+                    if (string.Equals(weapon.Name, nameof(Shotgun), StringComparison.OrdinalIgnoreCase))
+                        WEAPONS[2] = weapon;
+                }
             }
 
             // [0] - zombie, [1] - imp, [2] - demon
-            NPC[] NPCs = new NPC[3];
+            NPC[] NPCs = new NPC[_npcsCount];
 
-            foreach (NPC npc in _NPCs)
+            if (_NPCs is not null)
             {
-                if (string.Equals(npc.Name, nameof(Zombie), StringComparison.OrdinalIgnoreCase))
-                    NPCs[0] = npc;
-                if (string.Equals(npc.Name, nameof(Imp), StringComparison.OrdinalIgnoreCase))
-                    NPCs[1] = npc;
-                if (string.Equals(npc.Name, nameof(Demon), StringComparison.OrdinalIgnoreCase))
-                    NPCs[2] = npc;
+                foreach (NPC npc in _NPCs)
+                {
+                    if (string.Equals(npc.Name, nameof(Zombie), StringComparison.OrdinalIgnoreCase))
+                        NPCs[0] = npc;
+                    if (string.Equals(npc.Name, nameof(Imp), StringComparison.OrdinalIgnoreCase))
+                        NPCs[1] = npc;
+                    if (string.Equals(npc.Name, nameof(Demon), StringComparison.OrdinalIgnoreCase))
+                        NPCs[2] = npc;
+                }
             }
 
             // Zombie with Gun
-            Task task1;
-            if (_NPCs is not null && _WEAPONS.Count > 0)
-            {
-                if (_WEAPONS is not null && _WEAPONS.Count > 0)
-                    task1 = Task.Factory.StartNew(() => CreateMonster(new GunZombie(NPCs[0].Health, WEAPONS[1].Dmg)));
-                else
-                    task1 = Task.Factory.StartNew(() => CreateMonster(new GunZombie(NPCs[0].Health)));
-            }
-            else
-            {
-                task1 = Task.Factory.StartNew(() => CreateMonster(new GunZombie()));
-            }
+            Task task1 = Task.Factory.StartNew(() => CreateMonster(new GunZombie(NPCs[0].Health, WEAPONS[1].Dmg)));
 
-            //// Zombie with Shotgun
-            //Task task2;
-            //if (_NPCs is not null && _WEAPONS.Count > 0)
-            //{
-            //    if (_WEAPONS is not null && _WEAPONS.Count > 0)
-            //        task2 = Task.Factory.StartNew(() => CreateMonster(new ShotgunZombie(NPCs[0].Health, WEAPONS[2].Dmg)));
-            //    else
-            //        task2 = Task.Factory.StartNew(() => CreateMonster(new ShotgunZombie(NPCs[0].Health)));
-            //}
-            //else
-            //{
-            //    task2 = Task.Factory.StartNew(() => CreateMonster(new ShotgunZombie()));
-            //}
+            // Zombie with Shotgun
+            //Task task2 = Task.Factory.StartNew(() => CreateMonster(new ShotgunZombie(NPCs[0].Health, WEAPONS[2].Dmg)));
 
-            //Imp
-            Task task3;
-            if (_NPCs is not null)
-                task3 = Task.Factory.StartNew(() => CreateMonster(new Imp(NPCs[1].Health, NPCs[1].Dmg)));
-            else
-                task3 = Task.Factory.StartNew(() => CreateMonster(new Imp()));
+            // Imp
+            //Task task3 = Task.Factory.StartNew(() => CreateMonster(new Imp(NPCs[1].Health, NPCs[1].Dmg)));
 
-            //// Demon
-            //Task task4;
-            //if (_NPCs is not null)
-            //    task4 = Task.Factory.StartNew(() => CreateMonster(new Demon(NPCs[2].Health, NPCs[2].Dmg)));
-            //else
-            //    task4 = Task.Factory.StartNew(() => CreateMonster(new Demon()));
-
-            //Task.WaitAll(
-            //task1,
-            ////task2,
-            //task3
-            ////task4
-            //);
+            // Demon
+            //Task task4 = Task.Factory.StartNew(() => CreateMonster(new Demon(NPCs[2].Health, NPCs[2].Dmg)));
 
             while (true)
                 _player.PressKey();
