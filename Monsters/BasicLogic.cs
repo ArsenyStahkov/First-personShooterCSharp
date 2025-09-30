@@ -37,7 +37,7 @@ namespace TheGame
                 _player = new PlayerClass();
 
             WriteValueOnScreen(_healthValueX, _valueY, _player.Health, ConsoleColor.Green);
-            WriteValueOnScreen(_armorValueX, _valueY, _player.Armor, ConsoleColor.DarkBlue);
+            WriteValueOnScreen(_armorValueX, _valueY, _player.Armor, ConsoleColor.DarkGray);
             Console.WriteLine();
         }
 
@@ -89,7 +89,7 @@ namespace TheGame
 
                 if (_player.Armor <= 0)
                 {
-                    WriteValueOnScreen(_armorValueX, _valueY, _valueZero, ConsoleColor.DarkBlue);
+                    WriteValueOnScreen(_armorValueX, _valueY, _valueZero, ConsoleColor.DarkGray);
                 }
                 else
                 {
@@ -103,6 +103,7 @@ namespace TheGame
                 if (_player.Health <= 0)
                 {
                     WriteValueOnScreen(_healthValueX, _valueY, _valueZero, ConsoleColor.Red);
+                    WriteValueOnScreen(_armorValueX, _valueY, _valueZero, ConsoleColor.DarkGray);
                     _player.Die();
 
                     return;
@@ -112,10 +113,12 @@ namespace TheGame
                     if (_player.Health <= 60)
                     {
                         WriteValueOnScreen(_healthValueX, _valueY, _player.Health, ConsoleColor.DarkYellow);
+                        WriteValueOnScreen(_armorValueX, _valueY, _valueZero, ConsoleColor.DarkGray);
                     }
                     else
                     {
                         WriteValueOnScreen(_healthValueX, _valueY, _player.Health, ConsoleColor.Green);
+                        WriteValueOnScreen(_armorValueX, _valueY, _valueZero, ConsoleColor.DarkGray);
                     }
                 }
             }
@@ -157,12 +160,15 @@ namespace TheGame
 
             // Zombie with Gun
             Task task1 = Task.Factory.StartNew(() => CreateMonster(new GunZombie(NPCs[0].Health, WEAPONS[1].Dmg)));
+            Thread.Sleep(500);
 
             // Zombie with Shotgun
             //Task task2 = Task.Factory.StartNew(() => CreateMonster(new ShotgunZombie(NPCs[0].Health, WEAPONS[2].Dmg)));
+            //Thread.Sleep(500);
 
             // Imp
-            //Task task3 = Task.Factory.StartNew(() => CreateMonster(new Imp(NPCs[1].Health, NPCs[1].Dmg)));
+            Task task3 = Task.Factory.StartNew(() => CreateMonster(new Imp(NPCs[1].Health, NPCs[1].Dmg)));
+            Thread.Sleep(500);
 
             // Demon
             //Task task4 = Task.Factory.StartNew(() => CreateMonster(new Demon(NPCs[2].Health, NPCs[2].Dmg)));
